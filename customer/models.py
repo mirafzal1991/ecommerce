@@ -1,5 +1,9 @@
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.db import models
 from datetime import datetime,timezone
+from django.contrib.auth.models import User, PermissionsMixin
+from customer.managers import CustomUserManager
+
 
 # Create your models here.
 class Customer(models.Model):
@@ -16,3 +20,18 @@ class Customer(models.Model):
     class Meta:
         ordering = ('-joined',)
         verbose_name_plural = "Customers"
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(unique=True)
+    username = models.CharField(max_length=255,null=True,blank=True)
+    birth_of_date = models.DateField(null=True,blank=True)
+    password = models.CharField(max_length=255,null=True,blank=True)
+
+    object = CustomUserManager()
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.email
+

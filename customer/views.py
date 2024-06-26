@@ -3,18 +3,23 @@ from customer.models import Customer
 from customer.forms import CustomerModelForm
 from django.contrib import messages
 from app.models import Product
+from django.db.models import Q
 
 from app.forms import ProductForm,ProductModelForm
 
 # Create your views here.
 
 def customers(request):
-    customer_list = Customer.objects.all()
+    search_query = request.GET.get('search')
+    if search_query:
+        customer_list = Customer.objects.filter(Q(full_name__icontains=search_query)| Q(address__icontains=search_query))
+    else:
+        customer_list = Customer.objects.all()
     context = {
-        'customer_list': customer_list,
+            'customer_list': customer_list,
 
 
-    }
+        }
 
     return render(request,'customer/customer-list.html',context)
 
