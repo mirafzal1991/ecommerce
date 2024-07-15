@@ -4,6 +4,7 @@ from app.models import Product
 
 from app.forms import ProductForm,ProductModelForm
 
+
 # Create your views here.
 def index(request):
     products = Product.objects.all().order_by('-id')
