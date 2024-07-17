@@ -1,10 +1,11 @@
 from django.shortcuts import render,redirect
 from customer.models import Customer
-from customer.forms import CustomerModelForm
+from customer.forms import CustomerModelForm,EmailForm
 from django.contrib import messages
 from app.models import Product
 from django.db.models import Q
 from django.views.generic import TemplateView
+from django.core.mail import send_mail
 
 from app.forms import ProductForm,ProductModelForm
 
@@ -125,4 +126,15 @@ class EditCustomerView(TemplateView):
         context['form'] = form
         return context
 
-
+def send_email(request):
+    form = EmailForm()
+    if request.method == 'POST':
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            from_email = form.cleaned_data['email_from']
+            email_to = [form.cleaned_data['email_to']]
+            return redirect('customers')
+    context = {'form': form}
+    return render(request,'customer/send-mail.html',context)
