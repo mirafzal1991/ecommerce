@@ -131,10 +131,8 @@ def send_email(request):
     if request.method == 'POST':
         form = EmailForm(request.POST)
         if form.is_valid():
-            subject = form.cleaned_data['subject']
-            message = form.cleaned_data['message']
-            from_email = form.cleaned_data['email_from']
-            email_to = [form.cleaned_data['email_to']]
+            send_mail(form.cleaned_data['subject'],form.cleaned_data['message'],form.cleaned_data['email_from'],[form.cleaned_data['email_to']])
+
             return redirect('customers')
     context = {'form': form}
     return render(request,'customer/send-mail.html',context)
